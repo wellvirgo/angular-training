@@ -22,10 +22,21 @@
               {
                 "glob": "**/*",
                 "input": "public"
+              },
+              {
+                "glob": "**/*",
+                "input": "node_modules/@taiga-ui/icons/src",
+                "output": "assets/taiga-ui/icons"
               }
             ],
             "styles": [
-              "src/styles.css"
+              "node_modules/@taiga-ui/core/styles/taiga-ui-theme.less",
+              "node_modules/@taiga-ui/core/styles/taiga-ui-fonts.less",
+              "src/styles.css",
+              "node_modules/bootstrap/dist/css/bootstrap.min.css"
+            ],
+            "scripts": [
+              "node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"
             ]
           },
           "configurations": {
