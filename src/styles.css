@@ -1,1 +1,21 @@
 /* You can add global styles to this file, and also import other style files */
+
+:root {
+    --tui-font-text-s: 14px;
+}
+
+.tui-text_body-s {
+    font-size: var(--tui-font-text-s);
+}
+
+.text-white {
+    color: var(--tui-text-primary) !important;
+}
+
+.text-negative {
+    color: var(--tui-text-negative) !important;
+}
+
+.bg-neutral-2 {
+    background-color: var(--tui-background-neutral-2);
+}

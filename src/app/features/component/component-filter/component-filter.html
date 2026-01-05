@@ -1,0 +1,75 @@
+<search class="mt-4" tuiSearch>
+    <form [formGroup]="searchForm" class="d-flex flex-column gap-4" tuiForm="l">
+        <div class="row gap-4 gap-md-0">
+            <div class="col-12 col-md-4">
+                <fieldset>
+                    <tui-textfield>
+                        <label tuiLabel><span class="tui-text_body-s">Component code</span></label>
+                        <input tuiTextfield placeholder="Code" formControlName="componentCode" class="tui-text_body-m">
+                    </tui-textfield>
+                </fieldset>
+            </div>
+            <div class="col-12 col-md-8">
+                <fieldset>
+                    <tui-textfield>
+                        <label tuiLabel><span class="tui-text_body-s">Component name</span></label>
+                        <input tuiTextfield placeholder="Name" formControlName="componentName" class="tui-text_body-m">
+                    </tui-textfield>
+                </fieldset>
+            </div>
+        </div>
+        <fieldset>
+            <tui-textfield>
+                <label tuiLabel><span class="tui-text_body-s">Effective from</span></label>
+                <input tuiInputDate placeholder="From" formControlName="effectiveDateFrom" class="tui-text_body-m">
+                <tui-calendar *tuiTextfieldDropdown />
+            </tui-textfield>
+            <tui-textfield>
+                <label tuiLabel><span class="tui-text_body-s">Effective to</span></label>
+                <input tuiInputDate placeholder="To" formControlName="effectiveDateTo" class="tui-text_body-m">
+                <tui-calendar *tuiTextfieldDropdown />
+            </tui-textfield>
+            <tui-textfield>
+                <label tuiLabel><span class="tui-text_body-s">End effective from</span></label>
+                <input tuiInputDate placeholder="From" formControlName="endEffectiveDateFrom" class="tui-text_body-m">
+                <tui-calendar *tuiTextfieldDropdown />
+            </tui-textfield>
+            <tui-textfield>
+                <label tuiLabel><span class="tui-text_body-s">End effective to</span></label>
+                <input tuiInputDate placeholder="To" formControlName="endEffectiveDateTo" class="tui-text_body-m">
+                <tui-calendar *tuiTextfieldDropdown />
+            </tui-textfield>
+        </fieldset>
+        <button iconEnd="@tui.chevron-down" tuiLink type="button" [textContent]="moreFiltersLabel"
+            (click)="toggleMoreFilters()"></button>
+        <div class="row gap-4 gap-md-0 more-filters" [class.hide]="isHiddenMoreFilters">
+            <div class="col-12 col-md-6">
+                <fieldset>
+                    <tui-textfield tuiChevron [stringify]="checkTokenStringify">
+                        <label tuiLabel><span class="tui-text_body-s">Check Token</span></label>
+                        <input tuiSelect formControlName="checkToken" />
+                        <tui-data-list *tuiTextfieldDropdown>
+                            @for (item of checkTokens; track $index) {
+                            <button new tuiOption type="button" [value]="item.value">{{item.label}}</button>
+                            }
+                        </tui-data-list>
+                    </tui-textfield>
+                </fieldset>
+            </div>
+            <div class="col-12 col-md-6">
+                <fieldset>
+                    <tui-textfield tuiChevron [stringify]="statusStringify">
+                        <label tuiLabel><span class="tui-text_body-s">Status</span></label>
+                        <input tuiSelect formControlName="status">
+                        <tui-data-list *tuiTextfieldDropdown>
+                            @for (item of statuses; track $index) {
+                            <button new tuiOption type="button" [value]="item.value">{{item.label}}</button>
+                            }
+                        </tui-data-list>
+                    </tui-textfield>
+                </fieldset>
+            </div>
+        </div>
+        <app-button class="text-end" (action)="searchComponents()">Search</app-button>
+    </form>
+</search>
