@@ -4,12 +4,14 @@ import { ApplicationConfig, provideBrowserGlobalErrorListeners } from '@angular/
 import { provideRouter } from '@angular/router';
 
 import { routes } from './app.routes';
+import { provideHttpClient } from "@angular/common/http";
 
 export const appConfig: ApplicationConfig = {
     providers: [
         provideAnimations(),
         provideBrowserGlobalErrorListeners(),
         provideRouter(routes),
-        provideEventPlugins()
+        provideEventPlugins(),
+        provideHttpClient()
     ]
 };

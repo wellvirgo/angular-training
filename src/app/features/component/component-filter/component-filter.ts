@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, output } from '@angular/core';
 import { TuiDataList, TuiDropdown, TuiDropdownDirective, TuiTextfield, tuiDateFormatProvider, TuiLink } from "@taiga-ui/core";
 import { Button } from "../../../shared/button/button";
 import { Form, FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
@@ -7,7 +7,7 @@ import { TuiSearch, TuiForm } from '@taiga-ui/layout';
 import { TuiInputDate, TuiChevron, TuiDataListWrapper, TuiSelect } from "@taiga-ui/kit";
 import { TuiStringHandler } from '@taiga-ui/cdk/types';
 import { ComponentStatus, ComponentStatusMap } from '../../../core/enums/component-status.enum';
-import { SearchComponentReq } from '../../../core/dto/search-component-req';
+import { SearchComponentReq } from '../../../core/dto/component/search-component-req';
 
 interface CheckToken {
   value: string;
@@ -32,6 +32,8 @@ type SearchFormControls = {
   providers: [tuiDateFormatProvider({ mode: "DMY", separator: "-" })],
 })
 export class ComponentFilter {
+  protected searchTrigger = output<SearchComponentReq>();
+
   searchForm = new FormGroup<SearchFormControls>({
     componentCode: new FormControl(null),
     componentName: new FormControl(null),
@@ -69,7 +71,8 @@ export class ComponentFilter {
   }
 
   protected searchComponents(): void {
-    console.log('Search components with filters:', this.searchForm.value);
+    const criteria = this.searchForm.value as SearchComponentReq;
+    this.searchTrigger.emit(criteria);
   }
 
 }
