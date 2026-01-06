@@ -1,1 +1,6 @@
-<p>component-table works!</p>
+<div class="component-table">
+    <ag-grid-angular style="height: 100%;" [defaultColDef]="defaultColDef" [columnDefs]="colDefs"
+        [rowModelType]="'infinite'" [cacheBlockSize]="paginationPageSize()" [pagination]="true"
+        [paginationPageSize]="paginationPageSize()" [paginationPageSizeSelector]="paginationPageSizeSelector"
+        (gridReady)="onGridReady($event)"></ag-grid-angular>
+</div>

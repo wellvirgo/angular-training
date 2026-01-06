@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
-import { SearchComponentReq } from '../../dto/component/search-component-req';
+import { SearchComponentReqWithPagination } from '../../dto/component/search-component-req';
 import { Observable } from 'rxjs';
 import { ApiResponse } from '../../api/api-response';
 import { SearchComponentRes } from '../../dto/component/search-component-res';
@@ -13,7 +13,7 @@ export class ComponentService {
 
   private readonly API_URL = 'http://localhost:8080/api/pmh-components';
 
-  public fetchComponents(payload: SearchComponentReq): Observable<ApiResponse<SearchComponentRes>> {
+  public fetchComponents(payload: SearchComponentReqWithPagination): Observable<ApiResponse<SearchComponentRes>> {
     return this.httpClient.post<ApiResponse<SearchComponentRes>>(`${this.API_URL}/search`, payload);
   }
 }

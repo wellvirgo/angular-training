@@ -8,3 +8,8 @@ export interface SearchComponentReq {
     checkToken?: string;
     status?: number;
 }
+
+export interface SearchComponentReqWithPagination extends SearchComponentReq {
+    page?: number;
+    size?: number;
+}
