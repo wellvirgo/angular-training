@@ -1,8 +1,10 @@
 import { Component, effect, inject, input, signal } from '@angular/core';
 import { AgGridAngular } from "ag-grid-angular";
 import { ColDef, AllCommunityModule, ModuleRegistry, IDatasource, IGetRowsParams, GridApi, GridReadyEvent } from "ag-grid-community";
-import { SearchComponentReq, SearchComponentReqWithPagination } from '../../../core/dto/component/search-component-req';
+import { SearchComponentReq, SearchComponentReqWithPagination } from '../../../core/dto/component/component-req';
 import { ComponentService } from '../../../core/service/component/component-service';
+import { statusStringify } from '../../../core/enums/component-status.enum';
+import { ButtonGrid } from '../../../shared/button-grid/button-grid';
 
 ModuleRegistry.registerModules([AllCommunityModule]);
 
@@ -40,7 +42,8 @@ export class ComponentTable {
     { field: 'componentName', headerName: 'Component Name' },
     { field: 'effectiveDate', headerName: 'Effective Date' },
     { field: 'endEffectiveDate', headerName: 'End Effective Date' },
-    { field: 'status', headerName: 'Status' },
+    { field: 'status', headerName: 'Status', valueFormatter: (params) => statusStringify(params.value) },
+    { field: 'id', headerName: 'Actions', cellRenderer: ButtonGrid }
   ];
 
   paginationPageSizeSelector: number[] = [20, 50, 100];

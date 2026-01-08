@@ -13,3 +13,12 @@ export interface SearchComponentReqWithPagination extends SearchComponentReq {
     page?: number;
     size?: number;
 }
+
+export interface CreateComponentReq {
+    componentCode?: string;
+    componentName?: string;
+    messageType?: string;
+    connectionMethod?: string;
+    effectiveDate?: string;
+    checkToken?: string;
+}

@@ -1,11 +1,8 @@
-class Status {
+import { TuiStringHandler } from "@taiga-ui/cdk/types";
+
+interface IStatus {
     value: number;
     label: string;
-
-    constructor(value: number, label: string) {
-        this.value = value;
-        this.label = label;
-    }
 }
 
 export enum ComponentStatus {
@@ -16,10 +13,12 @@ export enum ComponentStatus {
     CANCELLED = 7
 }
 
-export const ComponentStatusMap: Record<number, Status> = {
-    [ComponentStatus.NEW]: new Status(ComponentStatus.NEW, 'New'),
-    [ComponentStatus.PENDING]: new Status(ComponentStatus.PENDING, 'Pending'),
-    [ComponentStatus.APPROVED]: new Status(ComponentStatus.APPROVED, 'Approved'),
-    [ComponentStatus.REJECTED]: new Status(ComponentStatus.REJECTED, 'Rejected'),
-    [ComponentStatus.CANCELLED]: new Status(ComponentStatus.CANCELLED, 'Cancelled'),
+export const ComponentStatusMap: Record<number, IStatus> = {
+    [ComponentStatus.NEW]: { value: ComponentStatus.NEW, label: 'New' },
+    [ComponentStatus.PENDING]: { value: ComponentStatus.PENDING, label: 'Pending' },
+    [ComponentStatus.APPROVED]: { value: ComponentStatus.APPROVED, label: 'Approved' },
+    [ComponentStatus.REJECTED]: { value: ComponentStatus.REJECTED, label: 'Rejected' },
+    [ComponentStatus.CANCELLED]: { value: ComponentStatus.CANCELLED, label: 'Cancelled' },
 };
+
+export const statusStringify: TuiStringHandler<number> = (value) => ComponentStatusMap[value]?.label || '';

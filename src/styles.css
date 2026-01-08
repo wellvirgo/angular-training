@@ -19,3 +19,14 @@
 .bg-neutral-2 {
     background-color: var(--tui-background-neutral-2);
 }
+
+tui-alert {
+    max-width: 400px !important;
+    width: 100% !important;
+}
+
+.success-message {
+    color: var(--tui-text-positive);
+    font-weight: bold;
+    font-size: 14px;
+}

@@ -19,6 +19,7 @@ export class Button {
 
   size = input<'s' | 'm' | 'l' | 'xs'>('m')
   appearance = input<typeof this.appearanceList[number]>('primary');
+  isDisabled = input<boolean>(false);
 
   action = output<void>();
 

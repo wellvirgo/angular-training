@@ -1,3 +1,4 @@
-<button tuiButton type="button" [size]="size()" [appearance]="appearance()" (click)="onClick()">
+<button tuiButton type="button" [size]="size()" [appearance]="appearance()" [disabled]="isDisabled()"
+    (click)="onClick()">
     <ng-content />
 </button>

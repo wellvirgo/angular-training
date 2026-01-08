@@ -1,0 +1,90 @@
+<section class="container component-add">
+    <div class="add-content bg-white p-4 rounded-3">
+        <div class="add-header row align-items-center">
+            <div class="col-12">
+                <h2 class="tui-text_h5 text-negative">Add New Component</h2>
+            </div>
+        </div>
+        <tui-loader [showLoader]="isLoading()" style="color: red;">
+            <div class="add-body">
+                <form tuiForm="l" [formGroup]="addForm">
+                    <fieldset>
+                        <tui-textfield>
+                            <label tuiLabel>
+                                <app-input-label>Component Code</app-input-label>
+                            </label>
+                            <input tuiTextfield placeholder="Code" formControlName="componentCode"
+                                class="tui-text_body-m">
+                        </tui-textfield>
+                    </fieldset>
+                    <tui-error formControlName="componentCode" [error]="[]|tuiFieldError|async"></tui-error>
+                    <fieldset>
+                        <tui-textfield>
+                            <label tuiLabel>
+                                <app-input-label>Component Name</app-input-label>
+                            </label>
+                            <input tuiTextfield placeholder="Name" formControlName="componentName"
+                                class="tui-text_body-m">
+                        </tui-textfield>
+                    </fieldset>
+                    <tui-error formControlName="componentName" [error]="[]|tuiFieldError|async"></tui-error>
+                    <fieldset>
+                        <tui-textfield>
+                            <label tuiLabel>
+                                <app-input-label>Connection Method</app-input-label>
+                            </label>
+                            <input tuiTextfield placeholder="Connection Method" formControlName="connectionMethod"
+                                class="tui-text_body-m">
+                        </tui-textfield>
+                    </fieldset>
+                    <tui-error formControlName="connectionMethod" [error]="[]|tuiFieldError|async"></tui-error>
+                    <fieldset>
+                        <tui-textfield>
+                            <label tuiLabel>
+                                <app-input-label>Effective Date</app-input-label>
+                            </label>
+                            <input tuiInputDate formControlName="effectiveDate">
+                            <tui-calendar *tuiTextfieldDropdown></tui-calendar>
+                        </tui-textfield>
+                    </fieldset>
+                    <tui-error formControlName="effectiveDate" [error]="[]|tuiFieldError|async"></tui-error>
+                    <fieldset>
+                        <div class="stack">
+                            <tui-textfield tuiChevron [stringify]="msgTypeStringify">
+                                <label tuiLabel>
+                                    <app-input-label>Message Type</app-input-label>
+                                </label>
+                                <input tuiSelect formControlName="messageType">
+                                <tui-data-list *tuiTextfieldDropdown>
+                                    @for (item of msgTypes(); track $index) {
+                                    <button new tuiOption type="button" [value]="item">{{item.description}}</button>
+                                    }
+                                </tui-data-list>
+                            </tui-textfield>
+                            <tui-error formControlName="messageType" [error]="[]|tuiFieldError|async"></tui-error>
+                        </div>
+                        <div class="stack">
+                            <tui-textfield tuiChevron [stringify]="checkTokenStringify">
+                                <label tuiLabel>
+                                    <app-input-label>Check Token</app-input-label>
+                                </label>
+                                <input tuiSelect formControlName="checkToken">
+                                <tui-data-list *tuiTextfieldDropdown>
+                                    @for (item of checkTokens; track $index) {
+                                    <button new tuiOption type="button" [value]="item.value">{{item.label}}</button>
+                                    }
+                                </tui-data-list>
+                            </tui-textfield>
+                        </div>
+                    </fieldset>
+
+                    <div class="d-flex justify-content-end gap-4">
+                        <app-button appearance="secondary" (action)="cancel()">Cancel</app-button>
+                        <app-button appearance="primary-destructive" [isDisabled]="isDisabledSubmit()"
+                            (action)="add()">Add</app-button>
+                    </div>
+                </form>
+            </div>
+        </tui-loader>
+    </div>
+</section>
