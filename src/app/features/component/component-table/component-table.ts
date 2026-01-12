@@ -1,10 +1,13 @@
-import { Component, effect, inject, input, signal } from '@angular/core';
+import { Component, effect, inject, input, output, signal } from '@angular/core';
 import { AgGridAngular } from "ag-grid-angular";
 import { ColDef, AllCommunityModule, ModuleRegistry, IDatasource, IGetRowsParams, GridApi, GridReadyEvent } from "ag-grid-community";
 import { SearchComponentReq, SearchComponentReqWithPagination } from '../../../core/dto/component/component-req';
 import { ComponentService } from '../../../core/service/component/component-service';
 import { statusStringify } from '../../../core/enums/component-status.enum';
 import { ButtonGrid } from '../../../shared/button-grid/button-grid';
+import { Router } from '@angular/router';
+import { NotifyService } from '../../../shared/notification/notify-service';
+import { filter, map } from 'rxjs';
 
 ModuleRegistry.registerModules([AllCommunityModule]);
 
@@ -16,6 +19,8 @@ ModuleRegistry.registerModules([AllCommunityModule]);
 })
 export class ComponentTable {
   private componentService = inject(ComponentService);
+  private notifyService = inject(NotifyService);
+  private router = inject(Router);
 
   criteria = input<SearchComponentReq>({});
 
@@ -37,13 +42,20 @@ export class ComponentTable {
   };
 
   colDefs: ColDef[] = [
-    { field: '#', valueGetter: 'node.rowIndex + 1', maxWidth: 70 },
-    { field: 'componentCode', headerName: 'Component Code' },
+    { field: '#', valueGetter: 'node.rowIndex + 1', maxWidth: 70, pinned: 'left' },
+    { field: 'componentCode', headerName: 'Component Code', maxWidth: 170, pinned: 'left' },
     { field: 'componentName', headerName: 'Component Name' },
     { field: 'effectiveDate', headerName: 'Effective Date' },
     { field: 'endEffectiveDate', headerName: 'End Effective Date' },
+    { field: 'messageType', headerName: 'Message Type' },
+    { field: 'connectionMethod', headerName: 'Connection Method' },
     { field: 'status', headerName: 'Status', valueFormatter: (params) => statusStringify(params.value) },
-    { field: 'id', headerName: 'Actions', cellRenderer: ButtonGrid }
+    {
+      field: 'id', headerName: 'Actions', maxWidth: 100, pinned: 'right', cellRenderer: ButtonGrid, cellRendererParams: {
+        updateButtonClick: this.updateComponent.bind(this),
+        deleteButtonClick: this.confirmDelete.bind(this),
+      }
+    }
   ];
 
   paginationPageSizeSelector: number[] = [20, 50, 100];
@@ -80,5 +92,36 @@ export class ComponentTable {
     };
     this.gridApi.setGridOption('datasource', datasource);
 
+  }
+
+  updateComponent(id: string | number) {
+    this.router.navigate(['/components/update', id,])
+  }
+
+  private deleteComponent(id: string | number) {
+    if (Number.isNaN(id)) return;
+    this.componentService.deleteComponent(Number(id))
+      .pipe(
+        filter(httpResponse => httpResponse.ok),
+        map((httpResponse) => httpResponse.body),
+        filter(responseBody => responseBody?.code === '200')
+      )
+      .subscribe({
+        next: () => {
+          this.notifyService.notifySuccess(undefined, 'Component deleted successfully.', 3500);
+          this.gridApi.refreshInfiniteCache();
+        },
+        error: (error) => {
+          let message = 'An unexpected error occurred while deleting the component.';
+          if (error.status === 401) {
+            message = 'You are not authorized to delete this component.';
+          }
+          this.notifyService.notifyError('Error deleting component', message, 5000);
+        }
+      });
+  }
+
+  confirmDelete(id: string | number) {
+    this.notifyService.showConfirmDialog('Delete Component', 'Are you sure you want to delete this component?', () => this.deleteComponent(id));
   }
 }

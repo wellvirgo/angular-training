@@ -1,7 +1,8 @@
 import { TuiRoot, TuiButton } from "@taiga-ui/core";
-import { Component, signal } from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { Header } from "./shared/header/header";
+import { AuthService } from "./core/service/auth/auth-service";
 
 @Component({
   selector: 'app-root',
@@ -11,4 +12,5 @@ import { Header } from "./shared/header/header";
 })
 export class App {
   protected readonly title = signal('pmh-component-train');
+  protected isAuthenticated = inject(AuthService).isAuthenticated;
 }

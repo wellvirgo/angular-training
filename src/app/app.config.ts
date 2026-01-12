@@ -4,9 +4,9 @@ import { ApplicationConfig, provideBrowserGlobalErrorListeners } from '@angular/
 import { provideRouter } from '@angular/router';
 
 import { routes } from './app.routes';
-import { provideHttpClient } from "@angular/common/http";
+import { provideHttpClient, withInterceptors } from "@angular/common/http";
 import { TUI_VALIDATION_ERRORS } from "@taiga-ui/kit";
-import { mustInFutureDate } from "./shared/validators/date.validator";
+import { authInterceptor } from "./core/service/auth/auth-interceptor";
 
 export const appConfig: ApplicationConfig = {
     providers: [
@@ -14,7 +14,7 @@ export const appConfig: ApplicationConfig = {
         provideBrowserGlobalErrorListeners(),
         provideRouter(routes),
         provideEventPlugins(),
-        provideHttpClient(),
+        provideHttpClient(withInterceptors([authInterceptor])),
         {
             provide: TUI_VALIDATION_ERRORS,
             useValue: {
@@ -22,6 +22,8 @@ export const appConfig: ApplicationConfig = {
                 maxlength: (context: { requiredLength: number, actualLength: number }) =>
                     `Maximum length is ${context.requiredLength} characters, but got ${context.actualLength}`,
                 mustInFutureDate: (context: { invalidDate: string }) =>
+                    `The date must be not in the past. Invalid date: ${context.invalidDate}`,
+                updateDateMustInFutureDate: (context: { invalidDate: string }) =>
                     `The date must be not in the past. Invalid date: ${context.invalidDate}`,
             }
         }

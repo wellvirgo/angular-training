@@ -8,7 +8,7 @@ import { InputLabel } from "../../../shared/input-label/input-label";
 import { TuiInputDateDirective, TuiSelectDirective, TuiChevron, TuiDataListWrapper, TuiFieldErrorPipe } from "@taiga-ui/kit";
 import { MessageTypeRes, msgTypeStringify } from '../../../core/dto/message-type/message-type-res';
 import { MessageTypeService } from '../../../core/service/message-type/message-type-service';
-import { map, startWith } from 'rxjs';
+import { map } from 'rxjs';
 import { Button } from "../../../shared/button/button";
 import { CheckTokenMap, checkTokenStringify } from '../../../core/enums/component-check-token.enum';
 import { Router } from '@angular/router';

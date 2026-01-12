@@ -2,3 +2,10 @@
     display: flex;
     justify-content: flex-end;
 }
+
+.hide {
+    display: none;
+    visibility: hidden;
+    pointer-events: none;
+    height: 0;
+}

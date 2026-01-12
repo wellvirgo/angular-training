@@ -1,0 +1,36 @@
+<div class="container-fluid auth-container">
+    <div class="login-form blur">
+        <h1 class="tui-text_h1 text-center text-uppercase">Login</h1>
+        <form tuiForm="l" [formGroup]="loginForm">
+            <fieldset>
+                <tui-textfield>
+                    <label tuiLabel>
+                        <app-input-label>Username</app-input-label>
+                    </label>
+                    <input tuiTextfield placeholder="Input username" class="tui-text_body-m"
+                        formControlName="username" />
+                </tui-textfield>
+            </fieldset>
+            <tui-error formControlName="username" [error]="[]|tuiFieldError|async" />
+            <fieldset>
+                <tui-textfield>
+                    <label tuiLabel>
+                        <app-input-label>Password</app-input-label>
+                    </label>
+                    <input tuiTextfield placeholder="Input password" type="password" class="tui-text_body-m"
+                        formControlName="password" />
+                    <tui-icon tuiPassword />
+                </tui-textfield>
+            </fieldset>
+            <tui-error formControlName="password" [error]="[]|tuiFieldError|async" />
+            <div class="row justify-content-center">
+                <app-button appearance="primary-destructive" (action)="login()" class="d-flex justify-content-center">
+                    <tui-loader [showLoader]="isLoading()">
+                        <span class="btn-login-text" [class.hide]="isLoading()">Login</span>
+                    </tui-loader>
+
+                </app-button>
+            </div>
+        </form>
+    </div>
+</div>

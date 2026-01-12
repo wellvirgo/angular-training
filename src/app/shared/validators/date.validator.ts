@@ -15,3 +15,18 @@ export function mustInFutureDate(control: AbstractControl): ValidationErrors | n
 
     return null;
 }
+
+export function updateDateMustInFutureDate(control: AbstractControl): ValidationErrors | null {
+    const inputDate = control.value;
+    if (!inputDate) return null;
+    if (control.pristine) return null;
+
+    const today = TuiDay.currentLocal();
+    if (today.dayAfter(inputDate)) {
+        return {
+            updateDateMustInFutureDate: { invalidDate: inputDate.toString() }
+        };
+    }
+
+    return null;
+}

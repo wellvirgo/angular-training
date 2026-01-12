@@ -1,9 +1,11 @@
-import { HttpClient, HttpResponse } from '@angular/common/http';
+import { HttpClient, HttpContext, HttpResponse } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
-import { CreateComponentReq, SearchComponentReqWithPagination } from '../../dto/component/component-req';
+import { CreateComponentReq, SearchComponentReqWithPagination, UpdateComponentReq } from '../../dto/component/component-req';
 import { Observable } from 'rxjs';
 import { ApiResponse } from '../../api/api-response';
 import { SearchComponentRes } from '../../dto/component/search-component-res';
+import { FullComponentRes } from '../../dto/component/component-res';
+import { IS_PUBLIC_API } from '../auth/auth-service';
 
 @Injectable({
   providedIn: 'root',
@@ -14,10 +16,24 @@ export class ComponentService {
   private readonly API_URL = 'http://localhost:8080/api/pmh-components';
 
   public fetchComponents(payload: SearchComponentReqWithPagination): Observable<ApiResponse<SearchComponentRes>> {
-    return this.httpClient.post<ApiResponse<SearchComponentRes>>(`${this.API_URL}/search`, payload);
+    return this.httpClient.post<ApiResponse<SearchComponentRes>>(`${this.API_URL}/search`, payload, {
+      context: new HttpContext().set(IS_PUBLIC_API, true)
+    });
   }
 
   public createComponent(payload: CreateComponentReq): Observable<HttpResponse<ApiResponse<any>>> {
     return this.httpClient.post<ApiResponse<any>>(`${this.API_URL}`, payload, { observe: 'response' });
+  }
+
+  public fetchComponentById(id: number): Observable<ApiResponse<FullComponentRes>> {
+    return this.httpClient.get<ApiResponse<FullComponentRes>>(`${this.API_URL}/${id}`);
+  }
+
+  public updateComponent(id: number, payload: UpdateComponentReq): Observable<HttpResponse<ApiResponse<any>>> {
+    return this.httpClient.put<ApiResponse<any>>(`${this.API_URL}/${id}`, payload, { observe: 'response' });
+  }
+
+  public deleteComponent(id: number): Observable<HttpResponse<ApiResponse<void>>> {
+    return this.httpClient.delete<ApiResponse<void>>(`${this.API_URL}/${id}`, { observe: 'response' });
   }
 }

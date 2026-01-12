@@ -14,7 +14,8 @@ export class Button {
     'primary-destructive',
     'primary-grayscale',
     'accent',
-    'positive'
+    'positive',
+    'flat-destructive',
   ];
 
   size = input<'s' | 'm' | 'l' | 'xs'>('m')

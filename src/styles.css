@@ -30,3 +30,14 @@ tui-alert {
     font-weight: bold;
     font-size: 14px;
 }
+
+.error-message {
+    color: var(--tui-text-negative);
+    font-weight: bold;
+    font-size: 14px;
+}
+
+[tuiForm]>fieldset.switch-container-right {
+    grid-auto-columns: max-content;
+    justify-content: end;
+}

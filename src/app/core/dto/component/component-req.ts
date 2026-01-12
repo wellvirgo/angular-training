@@ -1,3 +1,5 @@
+import { TuiDay } from "@taiga-ui/cdk";
+
 export interface SearchComponentReq {
     componentCode?: string;
     componentName?: string;
@@ -21,4 +23,17 @@ export interface CreateComponentReq {
     connectionMethod?: string;
     effectiveDate?: string;
     checkToken?: string;
+}
+
+export interface UpdateComponentReq {
+    componentCode?: string;
+    componentName?: string;
+    effectiveDate?: TuiDay;
+    endEffectiveDate?: TuiDay;
+    checkToken?: string;
+    status?: number;
+    connectionMethod?: string;
+    messageType?: string;
+    isDisplay?: number | boolean;
+    isActive?: number | boolean;
 }
