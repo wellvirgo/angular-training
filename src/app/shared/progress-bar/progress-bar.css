@@ -1,0 +1,4 @@
+.progress {
+    margin-block-end: 1rem;
+    color: var(--tui-chart-categorical-09);
+}

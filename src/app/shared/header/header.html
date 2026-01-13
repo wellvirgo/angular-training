@@ -6,9 +6,14 @@
         <app-button appearance="accent" (action)="handleLogout()">
             <div>
                 <tui-loader [showLoader]="isLoading()">
-                    <span [class.hide]="isLoading()">Logout</span>
+                    <span [class.hide-opacity]="isLoading()">Logout</span>
                 </tui-loader>
             </div>
         </app-button>
+    </div>
+</div>
+<div class="row">
+    <div class="col-12">
+        <app-progress-bar [maxValue]="100"></app-progress-bar>
     </div>
 </div>

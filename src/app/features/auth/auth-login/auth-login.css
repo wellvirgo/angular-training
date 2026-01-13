@@ -21,12 +21,6 @@
     backdrop-filter: blur(10px);
 }
 
-.hide {
-    opacity: 0;
-    visibility: hidden;
-    pointer-events: none;
-}
-
 .btn-login-text {
     width: 10rem;
 }

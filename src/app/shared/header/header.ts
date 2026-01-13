@@ -3,10 +3,11 @@ import { Button } from "../button/button";
 import { AuthService } from '../../core/service/auth/auth-service';
 import { finalize } from 'rxjs';
 import { TuiLoader } from '@taiga-ui/core';
+import { ProgressBar } from "../progress-bar/progress-bar";
 
 @Component({
   selector: 'app-header',
-  imports: [Button, TuiLoader],
+  imports: [Button, TuiLoader, ProgressBar],
   templateUrl: './header.html',
   styleUrl: './header.css',
 })

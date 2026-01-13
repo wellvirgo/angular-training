@@ -1,4 +1,11 @@
 <div class="component-table">
+    <div class="btn-export mb-4">
+        <app-button appearance="primary-grayscale" (action)="exportToExcelInBackEnd()">
+            <tui-loader size="l" [showLoader]="isExporting()">
+                <span [class.hide-opacity]="isExporting()">Export excel</span>
+            </tui-loader>
+        </app-button>
+    </div>
     <ag-grid-angular style="height: 100%;" [defaultColDef]="defaultColDef" [columnDefs]="colDefs"
         [rowModelType]="'infinite'" [cacheBlockSize]="paginationPageSize()" [pagination]="true"
         [paginationPageSize]="paginationPageSize()" [paginationPageSizeSelector]="paginationPageSizeSelector"

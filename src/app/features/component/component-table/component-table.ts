@@ -1,4 +1,4 @@
-import { Component, effect, inject, input, output, signal } from '@angular/core';
+import { Component, effect, inject, input, signal } from '@angular/core';
 import { AgGridAngular } from "ag-grid-angular";
 import { ColDef, AllCommunityModule, ModuleRegistry, IDatasource, IGetRowsParams, GridApi, GridReadyEvent } from "ag-grid-community";
 import { SearchComponentReq, SearchComponentReqWithPagination } from '../../../core/dto/component/component-req';
@@ -8,18 +8,22 @@ import { ButtonGrid } from '../../../shared/button-grid/button-grid';
 import { Router } from '@angular/router';
 import { NotifyService } from '../../../shared/notification/notify-service';
 import { filter, map } from 'rxjs';
+import { Button } from "../../../shared/button/button";
+import { ExcelService } from '../../../core/service/export/excel-service';
+import { TuiLoader } from '@taiga-ui/core';
 
 ModuleRegistry.registerModules([AllCommunityModule]);
 
 @Component({
   selector: 'app-component-table',
-  imports: [AgGridAngular],
+  imports: [AgGridAngular, Button, TuiLoader],
   templateUrl: './component-table.html',
   styleUrl: './component-table.css',
 })
 export class ComponentTable {
   private componentService = inject(ComponentService);
   private notifyService = inject(NotifyService);
+  private excelService = inject(ExcelService);
   private router = inject(Router);
 
   criteria = input<SearchComponentReq>({});
@@ -123,5 +127,41 @@ export class ComponentTable {
 
   confirmDelete(id: string | number) {
     this.notifyService.showConfirmDialog('Delete Component', 'Are you sure you want to delete this component?', () => this.deleteComponent(id));
+  }
+
+  protected isExporting = signal(false);
+
+  exportToExcelInFrontEnd() {
+    let data: any[] = [];
+    this.gridApi.forEachNode((node) => {
+      if (node.data) {
+        data.push({
+          'Component Code': node.data.componentCode,
+          'Component Name': node.data.componentName,
+          'Effective Date': node.data.effectiveDate,
+          'End Effective Date': node.data.endEffectiveDate,
+          'Message Type': node.data.messageType,
+          'Connection Method': node.data.connectionMethod,
+          'Status': statusStringify(node.data.status)
+        })
+      }
+    });
+    this.excelService.export(data, `components_export_${new Date().getTime()}`);
+  }
+
+  exportToExcelInBackEnd() {
+    this.isExporting.set(true);
+    this.componentService.exportComponentsToExcel(this.criteria()).subscribe({
+      next: (response) => {
+        const fileName = `components_export_${new Date().getTime()}.xlsx`;
+        this.isExporting.set(false);
+        if (response.body) {
+          this.componentService.dowloadFile(response.body, fileName, 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
+        }
+      },
+      error: (error) => {
+        this.notifyService.notifyError('Error exporting to Excel', 'An unexpected error occurred while exporting components to Excel.', 5000);
+      }
+    });
   }
 }

@@ -26,7 +26,7 @@
             <div class="row justify-content-center">
                 <app-button appearance="primary-destructive" (action)="login()" class="d-flex justify-content-center">
                     <tui-loader [showLoader]="isLoading()">
-                        <span class="btn-login-text" [class.hide]="isLoading()">Login</span>
+                        <span class="btn-login-text" [class.hide-opacity]="isLoading()">Login</span>
                     </tui-loader>
 
                 </app-button>

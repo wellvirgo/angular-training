@@ -41,3 +41,9 @@ tui-alert {
     grid-auto-columns: max-content;
     justify-content: end;
 }
+
+.hide-opacity {
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+}

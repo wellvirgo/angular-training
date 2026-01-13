@@ -25,7 +25,7 @@ export class AuthService {
   }
 
   public requestLogout(): Observable<HttpResponse<ApiResponse<void>>> {
-    return this.httpClient.post<ApiResponse<void>>(`${this.API_URL}/logout`, {}, { observe: 'response' });
+    return this.httpClient.post<ApiResponse<void>>(`${this.API_URL}/logout`, {}, { observe: 'response', withCredentials: true });
   }
 
   public refreshToken(): Observable<HttpResponse<ApiResponse<AuthRes>>> {
