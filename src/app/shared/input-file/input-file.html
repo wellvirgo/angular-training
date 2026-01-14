@@ -1,0 +1,23 @@
+@if (!control.value) {
+<label tuiInputFiles>
+    <input [accept]="EXCEL_EXPECTED" tuiInputFiles [formControl]=" control" />
+</label>
+}
+<tui-files class="tui-space_top-1">
+    @if (control.value|tuiFileRejected: {accept: EXCEL_EXPECTED}|async; as file) {
+    <tui-file state="error" [file]="file" (remove)="removeFile()" />
+    }
+
+    @if(loadedFiles|async; as file){
+    <tui-file [file]="file" (remove)="removeFile()" />
+    }
+
+    @if(failedFiles|async; as file){
+    <tui-file state="error" [file]="file" (remove)="removeFile()" />
+    }
+
+    @if(loadingFiles|async; as file){
+    <tui-file state="loading" [file]="file" (remove)="removeFile()" />
+    }
+
+</tui-files>

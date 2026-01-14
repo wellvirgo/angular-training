@@ -7,9 +7,11 @@ import { routes } from './app.routes';
 import { provideHttpClient, withInterceptors } from "@angular/common/http";
 import { TUI_VALIDATION_ERRORS } from "@taiga-ui/kit";
 import { authInterceptor } from "./core/service/auth/auth-interceptor";
+import { DatePipe } from "@angular/common";
 
 export const appConfig: ApplicationConfig = {
     providers: [
+        DatePipe,
         provideAnimations(),
         provideBrowserGlobalErrorListeners(),
         provideRouter(routes),

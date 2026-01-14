@@ -47,3 +47,7 @@ tui-alert {
     visibility: hidden;
     pointer-events: none;
 }
+
+.tui-text-info {
+    color: var(--tui-status-info);
+}

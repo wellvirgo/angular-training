@@ -11,12 +11,13 @@ import { filter, map } from 'rxjs';
 import { Button } from "../../../shared/button/button";
 import { ExcelService } from '../../../core/service/export/excel-service';
 import { TuiLoader } from '@taiga-ui/core';
+import { InputFile } from "../../../shared/input-file/input-file";
 
 ModuleRegistry.registerModules([AllCommunityModule]);
 
 @Component({
   selector: 'app-component-table',
-  imports: [AgGridAngular, Button, TuiLoader],
+  imports: [AgGridAngular, Button, TuiLoader, InputFile],
   templateUrl: './component-table.html',
   styleUrl: './component-table.css',
 })
