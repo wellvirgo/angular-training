@@ -12,7 +12,7 @@ import { of, timer } from 'rxjs';
 })
 export class ProgressBar {
   private readonly animationDisabled = inject(TUI_IS_E2E) || isPlatformServer(inject(PLATFORM_ID));
-  protected readonly fastValue = this.animationDisabled ? of(50) : timer(500, 100);
+  protected readonly fastValue = this.animationDisabled ? of(50) : timer(500, 50);
 
   maxValue = input.required<number>();
 }

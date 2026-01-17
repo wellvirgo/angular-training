@@ -6,6 +6,7 @@ import { ApiResponse } from '../../api/api-response';
 import { SearchComponentRes } from '../../dto/component/search-component-res';
 import { FullComponentRes } from '../../dto/component/component-res';
 import { IS_PUBLIC_API } from '../auth/auth-service';
+import { ImportComponentRes } from '../../dto/component/import-res';
 
 @Injectable({
   providedIn: 'root',
@@ -42,6 +43,12 @@ export class ComponentService {
       observe: 'response',
       responseType: 'blob'
     });
+  }
+
+  public importComponentsFromExcel(file: File): Observable<ApiResponse<ImportComponentRes>> {
+    const formData = new FormData();
+    formData.append('excel', file);
+    return this.httpClient.post<ApiResponse<ImportComponentRes>>(`${this.API_URL}/import`, formData);
   }
 
   public dowloadFile(data: Blob, fileName: string, type: string): void {

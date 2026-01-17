@@ -1,5 +1,6 @@
 <div class="row row-cols-1 p-2">
     <h2 class="tui-text_h2 tui-text-info">Component Import Preview</h2>
+    <app-progress-bar [maxValue]="maxValueProgressBar()" [class.hide-opacity]="!isImporting()"></app-progress-bar>
 </div>
 <div class="preview-table mt-2">
     <ag-grid-angular style="width: 100%; height: 700px;" [defaultColDef]="colDefsDefault" [columnDefs]="colDefs"

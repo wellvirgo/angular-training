@@ -51,3 +51,13 @@ tui-alert {
 .tui-text-info {
     color: var(--tui-status-info);
 }
+
+.success-count {
+    color: var(--tui-status-positive);
+    font-weight: bold;
+}
+
+.failed-count {
+    color: var(--tui-status-negative);
+    font-weight: bold;
+}

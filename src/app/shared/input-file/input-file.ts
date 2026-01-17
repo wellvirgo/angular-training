@@ -2,11 +2,10 @@ import { AsyncPipe } from '@angular/common';
 import { Component, inject, INJECTOR } from '@angular/core';
 import { FormControl, ReactiveFormsModule, Validators, ɵInternalFormsSharedModule } from '@angular/forms';
 import { type TuiFileLike, TuiFiles, TuiInputFilesDirective, TuiFilesComponent } from '@taiga-ui/kit';
-import { finalize, map, Observable, of, Subject, switchMap, tap, timer } from 'rxjs';
-import { ExcelImport } from '../../core/service/import/excel-import';
-import { TuiDialogService } from '@taiga-ui/core';
+import { finalize, Observable, of, Subject, switchMap, tap } from 'rxjs';
 import { PolymorpheusComponent } from '@taiga-ui/polymorpheus';
 import { ComponentPreviewModal } from '../../features/component/component-preview-modal/component-preview-modal';
+import { TuiDialogService } from '@taiga-ui/core/components/dialog';
 
 @Component({
   selector: 'app-input-file',
@@ -15,7 +14,6 @@ import { ComponentPreviewModal } from '../../features/component/component-previe
   styleUrl: './input-file.css',
 })
 export class InputFile {
-  private readonly excelImportService = inject(ExcelImport);
   private readonly injector = inject(INJECTOR);
   private readonly dialogService = inject(TuiDialogService);
 
@@ -38,20 +36,19 @@ export class InputFile {
 
     this.loadingFiles.next(file);
 
-    return this.excelImportService.readFile(file as File).pipe(
-      tap(data => this.openPreviewDialog(data)),
-      map(() => file),
-      finalize(() => this.loadingFiles.next(null))
-    )
+    return of(file).pipe(
+      tap(file => this.openPreviewDialog(file as File)),
+      finalize(() => this.loadingFiles.next(null)),
+    );
   }
 
   protected removeFile(): void {
     this.control.setValue(null);
   }
 
-  protected openPreviewDialog(data: any[]): void {
-    this.dialogService.open<any[]>(new PolymorpheusComponent(ComponentPreviewModal, this.injector), {
-      data: data,
+  protected openPreviewDialog(file: File): void {
+    this.dialogService.open<any>(new PolymorpheusComponent(ComponentPreviewModal, this.injector), {
+      data: file,
       size: 'page',
     }).subscribe();
   }
