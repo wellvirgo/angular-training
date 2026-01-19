@@ -1,4 +1,5 @@
 import { IStatus } from "../../enums/component-status.enum";
+import { MessageTypeRes } from "../message-type/message-type-res";
 
 export interface DetailComponentRes {
     id: number;
@@ -7,9 +8,9 @@ export interface DetailComponentRes {
     effectiveDate: any;
     endEffectiveDate: any;
     checkToken: string;
-    status: number;
+    status: IStatus;
     connectionMethod: string;
-    messageType: string;
+    messageType: MessageTypeRes;
 }
 
 export interface FullComponentRes {

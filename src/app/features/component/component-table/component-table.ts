@@ -12,6 +12,7 @@ import { Button } from "../../../shared/button/button";
 import { ExcelService } from '../../../core/service/export/excel-service';
 import { TuiLoader } from '@taiga-ui/core';
 import { InputFile } from "../../../shared/input-file/input-file";
+import { msgTypeStringify } from '../../../core/dto/message-type/message-type-res';
 
 ModuleRegistry.registerModules([AllCommunityModule]);
 
@@ -52,7 +53,7 @@ export class ComponentTable {
     { field: 'componentName', headerName: 'Component Name' },
     { field: 'effectiveDate', headerName: 'Effective Date' },
     { field: 'endEffectiveDate', headerName: 'End Effective Date' },
-    { field: 'messageType', headerName: 'Message Type' },
+    { field: 'messageType', headerName: 'Message Type', valueFormatter: (params) => msgTypeStringify(params.value) },
     { field: 'connectionMethod', headerName: 'Connection Method' },
     { field: 'status', headerName: 'Status', valueFormatter: (params) => statusStringify(params.value) },
     {
