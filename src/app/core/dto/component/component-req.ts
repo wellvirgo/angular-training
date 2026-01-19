@@ -1,4 +1,5 @@
 import { TuiDay } from "@taiga-ui/cdk";
+import { IStatus } from "../../enums/component-status.enum";
 
 export interface SearchComponentReq {
     componentCode?: string;
@@ -9,6 +10,17 @@ export interface SearchComponentReq {
     endEffectiveDateTo?: string;
     checkToken?: string;
     status?: number;
+}
+
+export interface SearchComponentCriteria {
+    componentCode?: string;
+    componentName?: string;
+    effectiveDateFrom?: string;
+    effectiveDateTo?: string;
+    endEffectiveDateFrom?: string;
+    endEffectiveDateTo?: string;
+    checkToken?: string;
+    status?: IStatus;
 }
 
 export interface SearchComponentReqWithPagination extends SearchComponentReq {
@@ -32,6 +44,19 @@ export interface UpdateComponentReq {
     endEffectiveDate?: TuiDay;
     checkToken?: string;
     status?: number;
+    connectionMethod?: string;
+    messageType?: string;
+    isDisplay?: number | boolean;
+    isActive?: number | boolean;
+}
+
+export interface UpdateComponentFormValue {
+    componentCode?: string;
+    componentName?: string;
+    effectiveDate?: TuiDay;
+    endEffectiveDate?: TuiDay;
+    checkToken?: string;
+    statusDetail?: IStatus;
     connectionMethod?: string;
     messageType?: string;
     isDisplay?: number | boolean;

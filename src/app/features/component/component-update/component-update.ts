@@ -1,26 +1,26 @@
-import { Component, effect, inject, OnInit, signal } from '@angular/core';
+import { Component, inject, OnInit, signal } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { TuiLoader, tuiLoaderOptionsProvider, TuiLabel, TuiTextfield, TuiDropdown, TuiDataList, tuiDateFormatProvider, TuiError } from "@taiga-ui/core";
 import { InputLabel } from "../../../shared/input-label/input-label";
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { FullComponentRes } from '../../../core/dto/component/component-res';
-import { UpdateComponentReq } from '../../../core/dto/component/component-req';
+import { UpdateComponentFormValue, UpdateComponentReq } from '../../../core/dto/component/component-req';
 import { TuiForm } from "@taiga-ui/layout";
 import { TuiDataListWrapper, TuiInputDate, TuiChevron, TuiSelectDirective, TuiSwitch, TuiFieldErrorPipe } from "@taiga-ui/kit";
 import { CheckTokenMap, checkTokenStringify } from '../../../core/enums/component-check-token.enum';
-import { ComponentStatusMap, statusStringify } from '../../../core/enums/component-status.enum';
+import { IStatus, statusStringify } from '../../../core/enums/component-status.enum';
 import { MessageTypeRes } from '../../../core/dto/message-type/message-type-res';
 import { MessageTypeService } from '../../../core/service/message-type/message-type-service';
 import { map } from 'rxjs';
 import { ComponentService } from '../../../core/service/component/component-service';
 import { TuiDay } from '@taiga-ui/cdk';
-import { AsyncPipe, JsonPipe } from '@angular/common';
+import { AsyncPipe } from '@angular/common';
 import { Button } from "../../../shared/button/button";
 import { toSignal } from '@angular/core/rxjs-interop';
 import { updateDateMustInFutureDate } from '../../../shared/validators/date.validator';
 import { NotifyService } from '../../../shared/notification/notify-service';
 
-type UpdateFormControls = { [K in keyof UpdateComponentReq]: FormControl<UpdateComponentReq[K]> };
+type UpdateFormControls = { [K in keyof UpdateComponentFormValue]: FormControl<UpdateComponentFormValue[K]> };
 
 @Component({
   selector: 'app-component-update',
@@ -50,7 +50,7 @@ export class ComponentUpdate implements OnInit {
     effectiveDate: new FormControl<any>(null, [updateDateMustInFutureDate]),
     endEffectiveDate: new FormControl<any>(null, [updateDateMustInFutureDate]),
     checkToken: new FormControl<any>(null),
-    status: new FormControl<any>(null),
+    statusDetail: new FormControl<any>(null),
     connectionMethod: new FormControl<any>(null, [Validators.maxLength(1000)]),
     messageType: new FormControl<any>(null, [Validators.maxLength(1500)]),
     isDisplay: new FormControl<any>(null),
@@ -77,8 +77,19 @@ export class ComponentUpdate implements OnInit {
       map(response => response.data)
     ).subscribe({
       next: (data) => this.msgType = data,
-      error: (errorResponse) => {
+      error: () => {
         this.notifyService.notifyError(undefined, `Failed to load message types`, 5000);
+      }
+    });
+
+    this.componentService.getAllComponentStatuses().subscribe({
+      next: response => {
+        if (response.data) {
+          this.statuses.push(...response.data);
+        }
+      },
+      error: () => {
+        this.notifyService.notifyError(undefined, `Failed to load component statuses`, 5000);
       }
     });
 
@@ -94,7 +105,7 @@ export class ComponentUpdate implements OnInit {
           this.updateForm.reset(this.apiData);
           this.isLoading.update(() => false);
         },
-        error: (errorResposne) => {
+        error: () => {
           this.isLoading.update(() => false);
           this.notifyService.notifyError(undefined, `Failed to load data`, 5000);
         }
@@ -104,8 +115,10 @@ export class ComponentUpdate implements OnInit {
 
   protected checkTokens = Object.values(CheckTokenMap);
   protected checkTokenStringify = checkTokenStringify;
-  protected statuses = Object.values(ComponentStatusMap);
+
+  protected statuses: IStatus[] = [];
   protected statusStringify = statusStringify;
+  protected statusIdentityMatcher = (item1: IStatus, item2: IStatus) => item1 && item2 ? item1.value === item2.value : item1 === item2;
 
   protected msgType: MessageTypeRes[] = [];
 
@@ -123,6 +136,7 @@ export class ComponentUpdate implements OnInit {
     this.isLoading.update(() => true);
     const payload: UpdateComponentReq = {
       ...this.updateForm.value,
+      status: this.updateForm.value.statusDetail?.value,
       isDisplay: this.convertBooleanToNumber(this.updateForm.value.isDisplay),
       isActive: this.convertBooleanToNumber(this.updateForm.value.isActive),
     };

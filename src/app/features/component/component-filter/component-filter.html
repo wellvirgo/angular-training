@@ -63,7 +63,7 @@
                         <input tuiSelect formControlName="status">
                         <tui-data-list *tuiTextfieldDropdown>
                             @for (item of statuses; track $index) {
-                            <button new tuiOption type="button" [value]="item.value">{{item.label}}</button>
+                            <button new tuiOption type="button" [value]="item">{{item.label}}</button>
                             }
                         </tui-data-list>
                     </tui-textfield>

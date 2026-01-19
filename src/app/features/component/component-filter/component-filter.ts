@@ -1,15 +1,16 @@
-import { Component, output } from '@angular/core';
+import { Component, inject, OnInit, output } from '@angular/core';
 import { TuiDataList, TuiDropdown, TuiDropdownDirective, TuiTextfield, tuiDateFormatProvider, TuiLink } from "@taiga-ui/core";
 import { Button } from "../../../shared/button/button";
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { TuiSearch, TuiForm } from '@taiga-ui/layout';
 import { TuiInputDate, TuiChevron, TuiDataListWrapper, TuiSelect } from "@taiga-ui/kit";
-import { ComponentStatusMap, statusStringify } from '../../../core/enums/component-status.enum';
-import { SearchComponentReq } from '../../../core/dto/component/component-req';
+import { IStatus, statusStringify } from '../../../core/enums/component-status.enum';
+import { SearchComponentCriteria, SearchComponentReq } from '../../../core/dto/component/component-req';
 import { CheckTokenMap, checkTokenStringify } from '../../../core/enums/component-check-token.enum';
+import { ComponentService } from '../../../core/service/component/component-service';
 
 type SearchFormControls = {
-  [K in keyof SearchComponentReq]: FormControl<SearchComponentReq[K] | null>;
+  [K in keyof SearchComponentCriteria]: FormControl<SearchComponentCriteria[K] | null>;
 };
 
 @Component({
@@ -20,8 +21,22 @@ type SearchFormControls = {
   styleUrl: './component-filter.css',
   providers: [tuiDateFormatProvider({ mode: "DMY", separator: "-" })],
 })
-export class ComponentFilter {
+export class ComponentFilter implements OnInit {
+  ngOnInit(): void {
+    this.componentService.getAllComponentStatuses()
+      .subscribe(response => {
+        if (response.data) {
+          this.statuses.push(...response.data);
+        }
+      });
+  }
+
+  private readonly componentService = inject(ComponentService);
+
+  protected readonly statuses: IStatus[] = [];
+  protected readonly statusStringify = statusStringify;
   protected searchTrigger = output<SearchComponentReq>();
+
 
   searchForm = new FormGroup<SearchFormControls>({
     componentCode: new FormControl(null),
@@ -35,10 +50,7 @@ export class ComponentFilter {
   });
 
   protected readonly checkTokens = Object.values(CheckTokenMap);
-  protected readonly statuses = Object.values(ComponentStatusMap);
-
   protected readonly checkTokenStringify = checkTokenStringify;
-  protected readonly statusStringify = statusStringify;
 
   isHiddenMoreFilters = true;
   moreFiltersLabel = 'More filters';
@@ -50,7 +62,8 @@ export class ComponentFilter {
   }
 
   protected searchComponents(): void {
-    const criteria = this.searchForm.value as SearchComponentReq;
+    const formValue = this.searchForm.value;
+    const criteria = { ...formValue, status: formValue.status?.value } as SearchComponentReq;
     this.searchTrigger.emit(criteria);
   }
 

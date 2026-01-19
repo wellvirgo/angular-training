@@ -105,14 +105,15 @@
                             </tui-textfield>
                         </div>
                         <div class="stack">
-                            <tui-textfield tuiChevron [stringify]="statusStringify">
+                            <tui-textfield tuiChevron [stringify]="statusStringify"
+                                [identityMatcher]="statusIdentityMatcher">
                                 <label tuiLabel>
                                     <app-input-label>Status</app-input-label>
                                 </label>
-                                <input tuiSelect formControlName="status" />
+                                <input tuiSelect formControlName="statusDetail" />
                                 <tui-data-list *tuiTextfieldDropdown>
                                     @for (item of statuses; track $index) {
-                                    <button new tuiOption type="button" [value]="item.value">{{item.label}}</button>
+                                    <button new tuiOption type="button" [value]="item">{{item.label}}</button>
                                     }
                                 </tui-data-list>
                             </tui-textfield>

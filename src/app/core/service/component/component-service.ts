@@ -7,6 +7,7 @@ import { SearchComponentRes } from '../../dto/component/search-component-res';
 import { FullComponentRes } from '../../dto/component/component-res';
 import { IS_PUBLIC_API } from '../auth/auth-service';
 import { ImportComponentRes } from '../../dto/component/import-res';
+import { IStatus } from '../../enums/component-status.enum';
 
 @Injectable({
   providedIn: 'root',
@@ -49,6 +50,10 @@ export class ComponentService {
     const formData = new FormData();
     formData.append('excel', file);
     return this.httpClient.post<ApiResponse<ImportComponentRes>>(`${this.API_URL}/import`, formData);
+  }
+
+  public getAllComponentStatuses(): Observable<ApiResponse<IStatus[]>> {
+    return this.httpClient.get<ApiResponse<IStatus[]>>(`${this.API_URL}/statuses`);
   }
 
   public dowloadFile(data: Blob, fileName: string, type: string): void {
