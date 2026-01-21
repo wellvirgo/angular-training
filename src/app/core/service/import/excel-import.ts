@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
-import { Subject, Observable, from, map } from 'rxjs';
-import * as XLSX from 'xlsx';
+import { Observable, from, map } from 'rxjs';
+import * as XLSX from 'xlsx-js-style';
 
 @Injectable({
   providedIn: 'root',

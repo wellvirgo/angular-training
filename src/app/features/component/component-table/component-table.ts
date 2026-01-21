@@ -142,9 +142,14 @@ export class ComponentTable {
 
   protected isExporting = signal(false);
 
-  exportToExcelInFrontEnd() {
+  exportTemplate() {
     let data: any[] = [];
+    const limit = 10
     this.gridApi.forEachNode((node) => {
+      if (data.length >= limit) {
+        return;
+      }
+
       if (node.data) {
         data.push({
           'Component Code': node.data.componentCode,
@@ -154,10 +159,10 @@ export class ComponentTable {
           'Message Type': node.data.messageType,
           'Connection Method': node.data.connectionMethod,
           'Status': statusStringify(node.data.status)
-        })
+        });
       }
     });
-    this.excelService.export(data, `components_export_${new Date().getTime()}`);
+    this.excelService.export(data, `template`);
   }
 
   exportToExcelInBackEnd() {

@@ -4,7 +4,16 @@
             <span [class.hide-opacity]="isExporting()">Export excel</span>
         </tui-loader>
     </app-button>
-    <app-input-file class="col-12 col-md-8"></app-input-file>
+    <div class="col-12 col-md-8">
+        <div class="row gap-2 gap-md-0">
+            <app-input-file class="col-12 col-md-9"></app-input-file>
+            <app-button class="col-12 col-md-3 d-flex align-items-center justify-content-md-end"
+                appearance="outline-destructive" (action)="exportTemplate()">
+                Excel Template
+            </app-button>
+        </div>
+    </div>
+
 </div>
 <div class="component-table">
     <ag-grid-angular style="height: 100%;" [defaultColDef]="defaultColDef" [columnDefs]="colDefs"
