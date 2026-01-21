@@ -78,13 +78,16 @@ export class ComponentPreviewModal {
       .subscribe({
         next: data => {
           this.maxValueProgressBar.update(() => 100);
+          this.componentService.changeHaveImported(true);
           setTimeout(() => {
             this.isImporting.update(() => false);
           }, 1000);
           this.showDialogByStatus(data);
         },
-        error: err => {
-          console.log("Error sever import", err);
+        error: errResponse => {
+          console.log(errResponse);
+          const errorMsg = errResponse.error ? `Component import failed: ${errResponse.error.message}` : 'Component import failed due to errors.';
+          this.notificationService.notifyError("Import Failed", errorMsg, 5000);
         }
       });
   }

@@ -28,6 +28,15 @@ export class ComponentTable {
   private excelService = inject(ExcelService);
   private router = inject(Router);
 
+  private refreshAfterImport = effect(() => {
+    const currentCriteria = this.criteria();
+    if (this.componentService.haveImported()) {
+      console.log("here");
+      this.updateDataSource(currentCriteria);
+      this.componentService.changeHaveImported(false);
+    }
+  });
+
   criteria = input<SearchComponentReq>({});
 
   constructor() {

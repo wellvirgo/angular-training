@@ -1,5 +1,5 @@
 import { HttpClient, HttpContext, HttpResponse } from '@angular/common/http';
-import { inject, Injectable } from '@angular/core';
+import { computed, inject, Injectable, signal } from '@angular/core';
 import { CreateComponentReq, SearchComponentReq, SearchComponentReqWithPagination, UpdateComponentReq } from '../../dto/component/component-req';
 import { Observable } from 'rxjs';
 import { ApiResponse } from '../../api/api-response';
@@ -14,6 +14,9 @@ import { IStatus } from '../../enums/component-status.enum';
 })
 export class ComponentService {
   private httpClient = inject(HttpClient);
+
+  private haveImported_ = signal(false);
+  public readonly haveImported = computed(() => this.haveImported_());
 
   private readonly API_URL = 'http://localhost:8080/api/pmh-components';
 
@@ -64,5 +67,9 @@ export class ComponentService {
     link.download = fileName;
     link.click();
     window.URL.revokeObjectURL(url);
+  }
+
+  public changeHaveImported(value: boolean): void {
+    this.haveImported_.update(() => value);
   }
 }
