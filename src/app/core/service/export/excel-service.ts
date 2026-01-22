@@ -29,7 +29,7 @@ export class ExcelService {
   }
 
   private setHeaderStyles(worksheet: XLSX.WorkSheet, headerStyle: XLSX.CellStyle): void {
-    const range = XLSX.utils.decode_range(worksheet['!ref'] || '');
+    const range = XLSX.utils.decode_range(worksheet['!ref'] ?? '');
 
     for (let col = range.s.c; col <= range.e.c; col++) {
       const cellAddress = XLSX.utils.encode_cell({ r: 0, c: col });

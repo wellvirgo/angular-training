@@ -31,7 +31,6 @@ export class ComponentTable {
   private refreshAfterImport = effect(() => {
     const currentCriteria = this.criteria();
     if (this.componentService.haveImported()) {
-      console.log("here");
       this.updateDataSource(currentCriteria);
       this.componentService.changeHaveImported(false);
     }
