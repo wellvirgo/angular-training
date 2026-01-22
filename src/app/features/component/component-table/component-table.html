@@ -19,5 +19,5 @@
     <ag-grid-angular style="height: 100%;" [defaultColDef]="defaultColDef" [columnDefs]="colDefs"
         [rowModelType]="'infinite'" [cacheBlockSize]="paginationPageSize()" [pagination]="true"
         [paginationPageSize]="paginationPageSize()" [paginationPageSizeSelector]="paginationPageSizeSelector"
-        (gridReady)="onGridReady($event)"></ag-grid-angular>
+        [autoSizeStrategy]="autoSizeStrategy" (gridReady)="onGridReady($event)"></ag-grid-angular>
 </div>

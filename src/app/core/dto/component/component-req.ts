@@ -26,6 +26,9 @@ export interface SearchComponentCriteria {
 export interface SearchComponentReqWithPagination extends SearchComponentReq {
     page?: number;
     size?: number;
+    searchTech: string;
+    sortField?: string;
+    sortDirection?: string;
 }
 
 export interface CreateComponentReq {

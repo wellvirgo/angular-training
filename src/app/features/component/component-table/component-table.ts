@@ -1,6 +1,6 @@
 import { Component, effect, inject, input, signal } from '@angular/core';
 import { AgGridAngular } from "ag-grid-angular";
-import { ColDef, AllCommunityModule, ModuleRegistry, IDatasource, IGetRowsParams, GridApi, GridReadyEvent } from "ag-grid-community";
+import { ColDef, AllCommunityModule, ModuleRegistry, IDatasource, IGetRowsParams, GridApi, GridReadyEvent, AutoSizeStrategy, SortChangedEvent, SortModelItem } from "ag-grid-community";
 import { SearchComponentReq, SearchComponentReqWithPagination } from '../../../core/dto/component/component-req';
 import { ComponentService } from '../../../core/service/component/component-service';
 import { statusStringify } from '../../../core/enums/component-status.enum';
@@ -53,14 +53,15 @@ export class ComponentTable {
     flex: 1,
     minWidth: 100,
     resizable: true,
+    sortable: false,
   };
 
   colDefs: ColDef[] = [
     { field: '#', valueGetter: 'node.rowIndex + 1', maxWidth: 70, pinned: 'left' },
-    { field: 'componentCode', headerName: 'Component Code', maxWidth: 170, pinned: 'left' },
-    { field: 'componentName', headerName: 'Component Name' },
-    { field: 'effectiveDate', headerName: 'Effective Date' },
-    { field: 'endEffectiveDate', headerName: 'End Effective Date' },
+    { field: 'componentCode', headerName: 'Component Code', maxWidth: 170, pinned: 'left', sortable: true },
+    { field: 'componentName', headerName: 'Component Name', sortable: true },
+    { field: 'effectiveDate', headerName: 'Effective Date', sortable: true },
+    { field: 'endEffectiveDate', headerName: 'End Effective Date', sortable: true },
     { field: 'messageType', headerName: 'Message Type', valueFormatter: (params) => msgTypeStringify(params.value) },
     { field: 'connectionMethod', headerName: 'Connection Method' },
     { field: 'status', headerName: 'Status', valueFormatter: (params) => statusStringify(params.value) },
@@ -71,6 +72,10 @@ export class ComponentTable {
       }
     }
   ];
+
+  autoSizeStrategy: AutoSizeStrategy = {
+    type: 'fitCellContents'
+  };
 
   paginationPageSizeSelector: number[] = [20, 50, 100];
   paginationPageSize = signal(this.paginationPageSizeSelector[0]);
@@ -85,12 +90,7 @@ export class ComponentTable {
   private updateDataSource(criteria: SearchComponentReq): void {
     const datasource: IDatasource = {
       getRows: (params: IGetRowsParams) => {
-        const page = Math.floor(params.startRow / this.paginationPageSize()) + 1;
-        const searchReq: SearchComponentReqWithPagination = {
-          ...criteria,
-          page: page,
-          size: this.paginationPageSize()
-        };
+        const searchReq: SearchComponentReqWithPagination = this.buildSearchCriteria(params);
 
         this.componentService.fetchComponents(searchReq)
           .subscribe({
@@ -178,5 +178,25 @@ export class ComponentTable {
         this.notifyService.notifyError('Error exporting to Excel', 'An unexpected error occurred while exporting components to Excel.', 5000);
       }
     });
+  }
+
+  private buildSearchCriteria(params: IGetRowsParams): SearchComponentReqWithPagination {
+    const sortModel = params.sortModel[0] as SortModelItem;
+    const sortDirection = sortModel?.sort.toUpperCase() ?? undefined;
+    const sortField = this.convertSortField(sortModel?.colId);
+    const page = Math.floor(params.startRow / this.paginationPageSize()) + 1;
+    return {
+      ...this.criteria(),
+      page: page,
+      size: this.paginationPageSize(),
+      searchTech: 'PROCEDURE',
+      sortField: sortField,
+      sortDirection: sortDirection,
+    };
+  }
+
+  private convertSortField(rawSortField: string): string | undefined {
+    if (!rawSortField) return undefined;
+    return rawSortField.split(/(?=[A-Z])/).join('_').toUpperCase();
   }
 }
