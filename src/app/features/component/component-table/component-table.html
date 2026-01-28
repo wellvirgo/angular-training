@@ -5,12 +5,15 @@
         </tui-loader>
     </app-button>
     <div class="col-12 col-md-8">
-        <div class="row gap-2 gap-md-0">
-            <app-input-file class="col-12 col-md-9"></app-input-file>
-            <app-button class="col-12 col-md-3 d-flex align-items-center justify-content-md-end"
-                appearance="outline-destructive" (action)="exportTemplate()">
-                Excel Template
-            </app-button>
+        <div class="d-flex flex-column flex-md-row justify-content-md-end align-items-md-center gap-2 gap-md-4">
+            <div class="d-flex justify-content-md-end">
+                <app-input-file></app-input-file>
+            </div>
+            <div class=" d-flex align-items-center">
+                <app-button appearance="outline-destructive" (action)="exportTemplate()">
+                    Template
+                </app-button>
+            </div>
         </div>
     </div>
 

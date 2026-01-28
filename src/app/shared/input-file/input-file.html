@@ -1,6 +1,11 @@
 @if (!control.value) {
 <label tuiInputFiles>
     <input [accept]="EXCEL_EXPECTED" tuiInputFiles [formControl]=" control" />
+    <ng-template let-dragged>
+        <div>
+            Import excel (browse or drag&drop)
+        </div>
+    </ng-template>
 </label>
 }
 <tui-files class="tui-space_top-1">
