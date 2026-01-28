@@ -1,6 +1,7 @@
-<div class="container bg-gradient d-flex justify-content-center align-items-center vh-100">
-    <tui-textfield tuiChevron class="w-50">
+<div class="container bg-gradient d-flex flex-column gap-5 justify-content-center align-items-center vh-100">
+    <tui-textfield tuiChevron class="w-50" [stringify]="stringify">
         <input tuiComboBox [formControl]="country" />
-        <tui-data-list-wrapper *tuiTextfieldDropdown new [items]="countries | tuiFilterByInput" />
+        <tui-data-list-wrapper *tuiTextfieldDropdown new [items]="countries() | tuiFilterByInput" />
     </tui-textfield>
+    <app-button (action)="changeOptions()">Change options</app-button>
 </div>

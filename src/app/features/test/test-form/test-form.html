@@ -1,0 +1,39 @@
+<div class="container w-50">
+    <app-button (click)="startIncrementAge()" appearance="outline-destructive">Start Auto Increment Age</app-button>
+    <app-button (click)="openAddition()">Addition</app-button>
+
+    <form class="mt-5" tuiForm="l" [formGroup]="testForm">
+        <tui-textfield>
+            <label tuiLabel>Name</label>
+            <input tuiTextfield formControlName="name">
+        </tui-textfield>
+        <tui-error formControlName="name" [error]="[]|tuiFieldError|async"></tui-error>
+
+        <tui-textfield>
+            <label tuiLabel>Confirm Name</label>
+            <input tuiTextfield formControlName="confirmName">
+        </tui-textfield>
+        <tui-error formControlName="confirmName" [error]="[]|tuiFieldError|async" />
+
+        <tui-textfield>
+            <label tuiLabel>Age</label>
+            <input tuiTextfield formControlName="age">
+        </tui-textfield>
+        <tui-error formControlName="age" [error]="[]|tuiFieldError|async" />
+        <tui-textfield>
+            <label tuiLabel>Birth Date</label>
+            <input tuiInputDate formControlName="birthDate" />
+            <tui-calendar *tuiTextfieldDropdown />
+        </tui-textfield>
+
+        <tui-textfield>
+            <label tuiLabel>Country</label>
+            <input tuiTextfield formControlName="country">
+        </tui-textfield>
+        <tui-error formControlName="country" [error]="[]|tuiFieldError|async" />
+    </form>
+    @if(testForm.hasError('unMatchedName') && (testForm.touched || testForm.dirty)){
+    <p class="text-danger">Names do not match</p>
+    }
+    <router-outlet></router-outlet>
+</div>
