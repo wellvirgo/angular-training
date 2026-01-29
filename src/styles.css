@@ -33,10 +33,15 @@ tui-alert {
     font-size: 14px;
 }
 
-.error-message {
+.error-message,
+.error-message-big {
     color: var(--tui-text-negative);
     font-weight: bold;
     font-size: 14px;
+}
+
+.error-message-big {
+    font-size: 18px;
 }
 
 [tuiForm]>fieldset.switch-container-right {

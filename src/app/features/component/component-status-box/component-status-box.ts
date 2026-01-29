@@ -1,7 +1,8 @@
-import { Component, effect, inject, input, output } from '@angular/core';
+import { Component, inject, input, output } from '@angular/core';
 import { Button } from "../../../shared/button/button";
 import { DetailComponentRes } from '../../../core/dto/component/component-res';
 import { NotifyService } from '../../../shared/notification/notify-service';
+import { ValidationResult } from '../../../shared/validators/validation-result';
 
 @Component({
   selector: 'app-component-status-box',
@@ -17,23 +18,23 @@ export class ComponentStatusBox {
   statusList = new Set<number>();
 
   protected updateStatus(status: string): void {
-    if (!this.checkCanUpdateStatus()) {
-      this.notifyService.showInfoDialog('Cannot Update Status', 'Please select components with the same status to update.', 'error-message');
+    const validationResult = this.checkCanUpdateStatus();
+    if (!validationResult.isValid) {
+      this.notifyService.showInfoDialog('Cannot Update Status', validationResult?.message ?? 'Please check the status of selected components.', 'error-message-big');
       return;
     }
 
     this.isUpdatable.emit(status);
   }
 
-  private checkCanUpdateStatus(): boolean {
+  private checkCanUpdateStatus(): ValidationResult {
     if (this.selectedComponents().length === 0)
-      return false;
+      return { isValid: false, message: 'No components selected.' };
 
     if (this.distinctStatusList(this.selectedComponents()).size > 1)
-      return false;
+      return { isValid: false, message: 'Selected components have different statuses.' };
 
-
-    return true;
+    return { isValid: true };
   }
 
   private distinctStatusList(components: DetailComponentRes[]): Set<number> {

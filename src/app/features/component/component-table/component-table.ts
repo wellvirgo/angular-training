@@ -112,7 +112,7 @@ export class ComponentTable {
   private updateDataSource(criteria: SearchComponentReq): void {
     const datasource: IDatasource = {
       getRows: (params: IGetRowsParams) => {
-        const searchReq: SearchComponentReqWithPagination = this.buildSearchCriteria(params);
+        const searchReq: SearchComponentReqWithPagination = this.buildSearchCriteria(criteria, params);
 
         this.componentService.fetchComponents(searchReq)
           .subscribe({
@@ -221,13 +221,13 @@ export class ComponentTable {
     });
   }
 
-  private buildSearchCriteria(params: IGetRowsParams): SearchComponentReqWithPagination {
+  private buildSearchCriteria(criteria: SearchComponentReq, params: IGetRowsParams): SearchComponentReqWithPagination {
     const sortModel = params.sortModel[0] as SortModelItem;
     const sortDirection = sortModel?.sort.toUpperCase() ?? undefined;
     const sortField = this.convertSortField(sortModel?.colId);
     const page = Math.floor(params.startRow / this.paginationPageSize()) + 1;
     return {
-      ...this.criteria(),
+      ...criteria,
       page: page,
       size: this.paginationPageSize(),
       searchTech: 'PROCEDURE',
