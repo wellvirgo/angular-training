@@ -1,0 +1,21 @@
+<div class="d-flex justify-content-md-end">
+        <div class="status-box row row-cols-2 row-cols-md-5">
+                <app-button class="width-100" appearance="primary" size="s" (action)="updateStatus('New')">
+                        <span class="btn-status-text">New</span>
+                </app-button>
+                <app-button class="width-100" appearance="warning" size="s" (action)="updateStatus('Pending')">
+                        <span class="btn-status-text">Pending</span>
+                </app-button>
+                <app-button class="width-100" appearance="primary-grayscale" size="s"
+                        (action)="updateStatus('Approved')">
+                        <span class="btn-status-text">Approve</span>
+                </app-button>
+                <app-button class="width-100" appearance="negative" size="s" (action)="updateStatus('Rejected')">
+                        <span class="btn-status-text">Reject</span>
+                </app-button>
+                <app-button class="width-100" appearance="primary-destructive" size="s"
+                        (action)="updateStatus('Cancelled')">
+                        <span class="btn-status-text">Cancel</span>
+                </app-button>
+        </div>
+</div>

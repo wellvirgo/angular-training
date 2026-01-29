@@ -1,0 +1,13 @@
+.status-box {
+    margin-bottom: 30px;
+}
+
+.btn-status-text {
+    font-weight: bold;
+}
+
+@media (max-width: 768px) {
+    .status-box {
+        row-gap: 10px;
+    }
+}

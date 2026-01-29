@@ -16,11 +16,14 @@
             </div>
         </div>
     </div>
-
 </div>
+<hr>
+<app-component-status-box [selectedComponents]="selectedComponents()"
+    (isUpdatable)="updateComponentsStatus($event)"></app-component-status-box>
 <div class="component-table">
     <ag-grid-angular style="height: 100%;" [defaultColDef]="defaultColDef" [columnDefs]="colDefs"
         [rowModelType]="'infinite'" [cacheBlockSize]="paginationPageSize()" [pagination]="true"
         [paginationPageSize]="paginationPageSize()" [paginationPageSizeSelector]="paginationPageSizeSelector"
-        [autoSizeStrategy]="autoSizeStrategy" (gridReady)="onGridReady($event)"></ag-grid-angular>
+        [autoSizeStrategy]="autoSizeStrategy" [rowSelection]="rowSelection" [selectionColumnDef]="selectionColumnDef"
+        (gridReady)="onGridReady($event)" (rowSelected)="onRowSelected($event)"></ag-grid-angular>
 </div>

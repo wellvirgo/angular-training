@@ -17,6 +17,9 @@ export class Button {
     'positive',
     'flat-destructive',
     'outline-destructive',
+    'info',
+    'warning',
+    'negative'
   ];
 
   size = input<'s' | 'm' | 'l' | 'xs'>('m')

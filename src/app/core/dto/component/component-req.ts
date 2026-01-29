@@ -65,3 +65,8 @@ export interface UpdateComponentFormValue {
     isDisplay?: number | boolean;
     isActive?: number | boolean;
 }
+
+export interface BatchingUpdateComponentStatusReq {
+    ids: number[];
+    status: string;
+}

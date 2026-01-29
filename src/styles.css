@@ -2,6 +2,8 @@
 
 :root {
     --tui-font-text-s: 14px;
+    --tui-status-positive-pale-hover: #4ac99b;
+    --tui-status-warning-pale: #ffc700;
 }
 
 .tui-text_body-s {
@@ -60,4 +62,8 @@ tui-alert {
 .failed-count {
     color: var(--tui-status-negative);
     font-weight: bold;
+}
+
+app-button.width-100 button {
+    width: 100%;
 }

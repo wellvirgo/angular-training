@@ -44,4 +44,11 @@ export class NotifyService {
             }
         );
     }
+
+    public showInfoDialog(title: string, message: string, style: string): void {
+        this.dialogService.open(`<span class="${style}">${message}</span>`, {
+            label: title,
+            size: 'm'
+        }).subscribe();
+    }
 }

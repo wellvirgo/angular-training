@@ -1,6 +1,6 @@
 import { HttpClient, HttpContext, HttpResponse } from '@angular/common/http';
 import { computed, inject, Injectable, signal } from '@angular/core';
-import { CreateComponentReq, SearchComponentReq, SearchComponentReqWithPagination, UpdateComponentReq } from '../../dto/component/component-req';
+import { BatchingUpdateComponentStatusReq, CreateComponentReq, SearchComponentReq, SearchComponentReqWithPagination, UpdateComponentReq } from '../../dto/component/component-req';
 import { Observable } from 'rxjs';
 import { ApiResponse } from '../../api/api-response';
 import { SearchComponentRes } from '../../dto/component/search-component-res';
@@ -57,6 +57,10 @@ export class ComponentService {
 
   public getAllComponentStatuses(): Observable<ApiResponse<IStatus[]>> {
     return this.httpClient.get<ApiResponse<IStatus[]>>(`${this.API_URL}/statuses`);
+  }
+
+  public batchUpdateComponentStatus(payload: BatchingUpdateComponentStatusReq): Observable<ApiResponse<number>> {
+    return this.httpClient.patch<ApiResponse<number>>(`${this.API_URL}/statuses`, payload);
   }
 
   public dowloadFile(data: Blob, fileName: string, type: string): void {

@@ -1,6 +1,6 @@
 import { Component, effect, inject, input, signal } from '@angular/core';
 import { AgGridAngular } from "ag-grid-angular";
-import { ColDef, AllCommunityModule, ModuleRegistry, IDatasource, IGetRowsParams, GridApi, GridReadyEvent, AutoSizeStrategy, SortChangedEvent, SortModelItem } from "ag-grid-community";
+import { ColDef, AllCommunityModule, ModuleRegistry, IDatasource, IGetRowsParams, GridApi, GridReadyEvent, AutoSizeStrategy, SortChangedEvent, SortModelItem, RowSelectionOptions, GridOptions, SelectionColumnDef, RowSelectedEvent } from "ag-grid-community";
 import { SearchComponentReq, SearchComponentReqWithPagination } from '../../../core/dto/component/component-req';
 import { ComponentService } from '../../../core/service/component/component-service';
 import { statusStringify } from '../../../core/enums/component-status.enum';
@@ -13,12 +13,14 @@ import { ExcelService } from '../../../core/service/export/excel-service';
 import { TuiLoader } from '@taiga-ui/core';
 import { InputFile } from "../../../shared/input-file/input-file";
 import { msgTypeStringify } from '../../../core/dto/message-type/message-type-res';
+import { ComponentStatusBox } from "../component-status-box/component-status-box";
+import { DetailComponentRes } from '../../../core/dto/component/component-res';
 
 ModuleRegistry.registerModules([AllCommunityModule]);
 
 @Component({
   selector: 'app-component-table',
-  imports: [AgGridAngular, Button, TuiLoader, InputFile],
+  imports: [AgGridAngular, Button, TuiLoader, InputFile, ComponentStatusBox],
   templateUrl: './component-table.html',
   styleUrl: './component-table.css',
 })
@@ -48,6 +50,7 @@ export class ComponentTable {
   }
 
   private gridApi!: GridApi;
+  protected selectedComponents = signal<DetailComponentRes[]>([]);
 
   defaultColDef: ColDef = {
     flex: 1,
@@ -77,6 +80,15 @@ export class ComponentTable {
     type: 'fitCellContents'
   };
 
+  rowSelection: RowSelectionOptions | 'single' | 'multiple' = {
+    mode: 'multiRow'
+  }
+
+  selectionColumnDef: SelectionColumnDef = {
+    pinned: 'left',
+    width: 50,
+  };
+
   paginationPageSizeSelector: number[] = [20, 50, 100];
   paginationPageSize = signal(this.paginationPageSizeSelector[0]);
 
@@ -85,6 +97,16 @@ export class ComponentTable {
   onGridReady(event: GridReadyEvent) {
     this.gridApi = event.api;
     this.updateDataSource(this.criteria());
+  }
+
+  onRowSelected(event: RowSelectedEvent) {
+    const node = event.node;
+    const data = node.data;
+
+    if (node.isSelected())
+      this.selectedComponents.set([...this.selectedComponents(), data]);
+    else
+      this.selectedComponents.set(this.selectedComponents().filter(component => component.id !== data.id));
   }
 
   private updateDataSource(criteria: SearchComponentReq): void {
@@ -137,6 +159,25 @@ export class ComponentTable {
 
   confirmDelete(id: string | number) {
     this.notifyService.showConfirmDialog('Delete Component', 'Are you sure you want to delete this component?', () => this.deleteComponent(id));
+  }
+
+  updateComponentsStatus(status: string) {
+    const componentIds = this.selectedComponents().map(component => component.id);
+    this.componentService.batchUpdateComponentStatus({ ids: componentIds, status: status })
+      .subscribe({
+        next: response => {
+          const data = response.data;
+          this.notifyService.notifySuccess(undefined, `Successfully updated status for ${data} components.`, 4000);
+          this.gridApi.refreshInfiniteCache();
+          this.gridApi.deselectAll();
+          this.selectedComponents.set([]);
+        },
+        error: errorResponse => {
+          const errorCode = errorResponse.error?.code || 'Error';
+          if (errorCode === '65')
+            this.notifyService.notifyError(undefined, 'Error occurred while updating components status.', 5000);
+        }
+      });
   }
 
   protected isExporting = signal(false);
