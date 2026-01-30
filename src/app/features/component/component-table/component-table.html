@@ -25,5 +25,6 @@
         [rowModelType]="'infinite'" [cacheBlockSize]="paginationPageSize()" [pagination]="true"
         [paginationPageSize]="paginationPageSize()" [paginationPageSizeSelector]="paginationPageSizeSelector"
         [autoSizeStrategy]="autoSizeStrategy" [rowSelection]="rowSelection" [selectionColumnDef]="selectionColumnDef"
-        (gridReady)="onGridReady($event)" (rowSelected)="onRowSelected($event)"></ag-grid-angular>
+        (gridReady)="onGridReady($event)" (rowSelected)="onRowSelected($event)"
+        (cellValueChanged)="onCellValueChanged($event)"></ag-grid-angular>
 </div>

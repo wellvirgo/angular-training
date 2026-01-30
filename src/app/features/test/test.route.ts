@@ -1,5 +1,4 @@
 import { Routes } from '@angular/router';
-import { TestFormAddition } from './test-form-addition/test-form-addition';
 
 
 export default [
@@ -10,13 +9,8 @@ export default [
         children: [
             {
                 path: 'addition',
-                component: TestFormAddition,
+                loadComponent: () => import('./test-form-addition/test-form-addition').then(m => m.TestFormAddition),
             },
-            {
-                path: 'test-addition',
-                outlet: 'addition',
-                component: TestFormAddition,
-            }
         ]
     },
 ] satisfies Routes;

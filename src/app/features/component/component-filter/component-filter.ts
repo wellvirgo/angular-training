@@ -27,6 +27,7 @@ export class ComponentFilter implements OnInit {
       .subscribe(response => {
         if (response.data) {
           this.statuses.push(...response.data);
+          this.statusesChange.emit(this.statuses);
         }
       });
   }
@@ -36,6 +37,7 @@ export class ComponentFilter implements OnInit {
   protected readonly statuses: IStatus[] = [];
   protected readonly statusStringify = statusStringify;
   protected searchTrigger = output<SearchComponentReq>();
+  protected statusesChange = output<IStatus[]>();
 
 
   searchForm = new FormGroup<SearchFormControls>({

@@ -9,11 +9,13 @@
             </div>
         </div>
         <div class="box-filter">
-            <app-component-filter (searchTrigger)="search($event)"></app-component-filter>
+            <app-component-filter (statusesChange)="updateStatuses($event)"
+                (searchTrigger)="search($event)"></app-component-filter>
         </div>
         <hr style="border: 1px solid gray; margin-top: 20px;">
         <div class="component-list">
-            <app-component-table [criteria]="initialSearchCriteria()"></app-component-table>
+            <app-component-table [criteria]="initialSearchCriteria()"
+                [componentStatuses]="componentStatuses()"></app-component-table>
         </div>
     </div>
 </section>

@@ -4,6 +4,7 @@ import { ComponentFilter } from "../component-filter/component-filter";
 import { SearchComponentReq } from '../../../core/dto/component/component-req';
 import { ComponentTable } from "../component-table/component-table";
 import { Router } from "@angular/router";
+import { IStatus } from '../../../core/enums/component-status.enum';
 
 @Component({
   selector: 'app-component-dashboard',
@@ -13,6 +14,7 @@ import { Router } from "@angular/router";
 })
 export class ComponentDashboard {
   private router = inject(Router);
+  protected componentStatuses = signal<IStatus[]>([]);
 
   protected initialSearchCriteria = signal<SearchComponentReq>({});
 
@@ -22,5 +24,9 @@ export class ComponentDashboard {
 
   protected toAddPage(): void {
     this.router.navigate(['/components/add']);
+  }
+
+  protected updateStatuses(statuses: IStatus[]): void {
+    this.componentStatuses.set(statuses);
   }
 }

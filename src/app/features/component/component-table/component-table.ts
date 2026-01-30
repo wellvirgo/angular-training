@@ -1,9 +1,9 @@
-import { Component, effect, inject, input, signal } from '@angular/core';
+import { Component, effect, inject, input, OnChanges, signal, SimpleChanges } from '@angular/core';
 import { AgGridAngular } from "ag-grid-angular";
-import { ColDef, AllCommunityModule, ModuleRegistry, IDatasource, IGetRowsParams, GridApi, GridReadyEvent, AutoSizeStrategy, SortChangedEvent, SortModelItem, RowSelectionOptions, GridOptions, SelectionColumnDef, RowSelectedEvent } from "ag-grid-community";
+import { ColDef, AllCommunityModule, ModuleRegistry, IDatasource, IGetRowsParams, GridApi, GridReadyEvent, AutoSizeStrategy, SortChangedEvent, SortModelItem, RowSelectionOptions, GridOptions, SelectionColumnDef, RowSelectedEvent, ISelectCellEditorParams, ICellEditorParams, CellValueChangedEvent } from "ag-grid-community";
 import { SearchComponentReq, SearchComponentReqWithPagination } from '../../../core/dto/component/component-req';
 import { ComponentService } from '../../../core/service/component/component-service';
-import { statusStringify } from '../../../core/enums/component-status.enum';
+import { IStatus, statusStringify } from '../../../core/enums/component-status.enum';
 import { ButtonGrid } from '../../../shared/button-grid/button-grid';
 import { Router } from '@angular/router';
 import { NotifyService } from '../../../shared/notification/notify-service';
@@ -39,6 +39,7 @@ export class ComponentTable {
   });
 
   criteria = input<SearchComponentReq>({});
+  componentStatuses = input<IStatus[]>([]);
 
   constructor() {
     effect(() => {
@@ -67,7 +68,16 @@ export class ComponentTable {
     { field: 'endEffectiveDate', headerName: 'End Effective Date', sortable: true },
     { field: 'messageType', headerName: 'Message Type', valueFormatter: (params) => msgTypeStringify(params.value) },
     { field: 'connectionMethod', headerName: 'Connection Method' },
-    { field: 'status', headerName: 'Status', valueFormatter: (params) => statusStringify(params.value) },
+    {
+      field: 'status', headerName: 'Status', valueFormatter: (params) => statusStringify(params.value),
+      editable: true,
+      cellEditor: 'agSelectCellEditor',
+      cellEditorParams: (params: ICellEditorParams) => {
+        return {
+          values: this.componentStatuses()
+        };
+      }
+    },
     {
       field: 'id', headerName: 'Actions', maxWidth: 100, pinned: 'right', cellRenderer: ButtonGrid, cellRendererParams: {
         updateButtonClick: this.updateComponent.bind(this),
@@ -107,6 +117,24 @@ export class ComponentTable {
       this.selectedComponents.set([...this.selectedComponents(), data]);
     else
       this.selectedComponents.set(this.selectedComponents().filter(component => component.id !== data.id));
+  }
+
+  onCellValueChanged(event: CellValueChangedEvent) {
+    if (event.colDef.field === 'status') {
+      const componentId = event.data.id;
+      const newStatus = event.newValue.label;
+      this.componentService.batchUpdateComponentStatus({ ids: [componentId], status: newStatus })
+        .subscribe({
+          next: () => {
+            this.notifyService.notifySuccess(undefined, `Component status updated successfully.`, 3000);
+          },
+          error: () => {
+            this.notifyService.notifyError('Error updating status', 'An unexpected error occurred while updating component status.', 3000);
+            event.data.status = event.oldValue;
+            this.gridApi.refreshCells({ rowNodes: [event.node], columns: ['status'] });
+          }
+        });
+    }
   }
 
   private updateDataSource(criteria: SearchComponentReq): void {

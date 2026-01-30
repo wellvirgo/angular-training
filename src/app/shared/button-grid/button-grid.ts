@@ -19,7 +19,6 @@ export class ButtonGrid implements ICellRendererAngularComp {
 
   agInit(params: ButtonGridParams): void {
     this.params = params;
-
   }
   refresh(params: ButtonGridParams): boolean {
     return false
